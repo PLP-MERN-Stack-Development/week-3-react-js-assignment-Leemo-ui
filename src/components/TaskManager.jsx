@@ -1,60 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import Button from './Button';
-
-/**
- * Custom hook for managing tasks with localStorage persistence
- */
-const useLocalStorageTasks = () => {
-  // Initialize state from localStorage or with empty array
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
-  // Update localStorage when tasks change
-  useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
-
-  // Add a new task
-  const addTask = (text) => {
-    if (text.trim()) {
-      setTasks([
-        ...tasks,
-        {
-          id: Date.now(),
-          text,
-          completed: false,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-    }
-  };
-
-  // Toggle task completion status
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
-  // Delete a task
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  return { tasks, addTask, toggleTask, deleteTask };
-};
+import useLocalStorage from '../utils/useLocalStorage';
 
 /**
  * TaskManager component for managing tasks
  */
 const TaskManager = () => {
-  const { tasks, addTask, toggleTask, deleteTask } = useLocalStorageTasks();
-  const [newTaskText, setNewTaskText] = useState('');
+  const [tasks, setTasks] = useLocalStorage('tasks', []);
+  const [input, setInput] = useState('');
   const [filter, setFilter] = useState('all');
+
+  // Add a new task
+  const addTask = () => {
+    if (!input.trim()) return;
+    setTasks([
+      ...tasks,
+      {
+        id: Date.now(),
+        text: input,
+        completed: false,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    setInput('');
+  };
+
+  // Toggle task completion status
+  const toggleTask = (id) => {
+    const updated = [...tasks];
+    const task = updated.find((task) => task.id === id);
+    if (task) {
+      task.completed = !task.completed;
+      setTasks(updated);
+    }
+  };
+
+  // Delete a task
+  const deleteTask = (id) => {
+    const updated = tasks.filter((task) => task.id !== id);
+    setTasks(updated);
+  };
 
   // Filter tasks based on selected filter
   const filteredTasks = tasks.filter((task) => {
@@ -66,8 +51,7 @@ const TaskManager = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTask(newTaskText);
-    setNewTaskText('');
+    addTask();
   };
 
   return (
@@ -79,8 +63,8 @@ const TaskManager = () => {
         <div className="flex gap-2">
           <input
             type="text"
-            value={newTaskText}
-            onChange={(e) => setNewTaskText(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Add a new task..."
             className="flex-grow px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
           />
@@ -165,4 +149,4 @@ const TaskManager = () => {
   );
 };
 
-export default TaskManager; 
+export default TaskManager;
