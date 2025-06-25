@@ -1,7 +1,8 @@
 {
-  "name": "your-project-name",
+  "name": "week-3-react-js-assignment-Leemo-ui",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://plp-mern-stack-development.github.io/week-3-react-js-assignment-Leemo-ui/",
   "dependencies": {
     "prop-types": "^15.8.1",
     "react": "^18.0.0",
@@ -12,7 +13,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.6.0",
