@@ -8,10 +8,15 @@ import useLocalStorage from '../utils/useLocalStorage';
 const TaskManager = () => {
   const [tasks, setTasks] = useLocalStorage('tasks', []);
   const [input, setInput] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('All');
+
+  useEffect(() => {
+    // Example effect (could be analytics, etc.)
+  }, []);
 
   // Add a new task
-  const addTask = () => {
+  const addTask = (e) => {
+    e.preventDefault();
     if (!input.trim()) return;
     setTasks([
       ...tasks,
@@ -26,27 +31,27 @@ const TaskManager = () => {
   };
 
   // Toggle task completion status
-  const toggleTask = (id) => {
+  const toggleTask = (index) => {
     const updated = [...tasks];
-    const task = updated.find((task) => task.id === id);
-    if (task) {
-      task.completed = !task.completed;
-      setTasks(updated);
-    }
+    updated[index].completed = !updated[index].completed;
+    setTasks(updated);
   };
 
   // Delete a task
-  const deleteTask = (id) => {
-    const updated = tasks.filter((task) => task.id !== id);
+  const deleteTask = (index) => {
+    const updated = [...tasks];
+    updated.splice(index, 1);
     setTasks(updated);
   };
 
   // Filter tasks based on selected filter
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === 'active') return !task.completed;
-    if (filter === 'completed') return task.completed;
-    return true; // 'all' filter
-  });
+  const filteredTasks = tasks.filter((task) =>
+    filter === 'All'
+      ? true
+      : filter === 'Active'
+      ? !task.completed
+      : task.completed
+  );
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -77,23 +82,23 @@ const TaskManager = () => {
       {/* Filter buttons */}
       <div className="flex gap-2 mb-4">
         <Button
-          variant={filter === 'all' ? 'primary' : 'secondary'}
+          variant={filter === 'All' ? 'primary' : 'secondary'}
           size="sm"
-          onClick={() => setFilter('all')}
+          onClick={() => setFilter('All')}
         >
           All
         </Button>
         <Button
-          variant={filter === 'active' ? 'primary' : 'secondary'}
+          variant={filter === 'Active' ? 'primary' : 'secondary'}
           size="sm"
-          onClick={() => setFilter('active')}
+          onClick={() => setFilter('Active')}
         >
           Active
         </Button>
         <Button
-          variant={filter === 'completed' ? 'primary' : 'secondary'}
+          variant={filter === 'Completed' ? 'primary' : 'secondary'}
           size="sm"
-          onClick={() => setFilter('completed')}
+          onClick={() => setFilter('Completed')}
         >
           Completed
         </Button>
@@ -106,33 +111,26 @@ const TaskManager = () => {
             No tasks found
           </li>
         ) : (
-          filteredTasks.map((task) => (
+          filteredTasks.map((task, i) => (
             <li
-              key={task.id}
-              className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:border-gray-700"
+              key={i}
+              className="bg-white p-4 rounded shadow flex items-center justify-between"
             >
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleTask(task.id)}
-                  className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
-                />
-                <span
-                  className={`${
-                    task.completed ? 'line-through text-gray-500 dark:text-gray-400' : ''
-                  }`}
-                >
-                  {task.text}
-                </span>
-              </div>
+              <span
+                onClick={() => toggleTask(i)}
+                className={`flex-1 cursor-pointer ${
+                  task.completed ? 'line-through text-gray-400' : ''
+                }`}
+              >
+                {task.text}
+              </span>
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => deleteTask(task.id)}
+                onClick={() => deleteTask(i)}
                 aria-label="Delete task"
               >
-                Delete
+                ❌
               </Button>
             </li>
           ))

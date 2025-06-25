@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb; /* light gray */
+}
+
+h1 {
+  color: #1f2937; /* dark gray */
+}

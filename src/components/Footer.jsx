@@ -1,10 +1,9 @@
+// src/components/Footer.jsx
 export default function Footer() {
   return (
-    <footer className="bg-white dark:bg-gray-800 shadow mt-auto p-4 text-center text-sm text-gray-500">
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <p className="text-gray-500 dark:text-gray-400">
-          © {new Date().getFullYear()} PLP Task Manager. All rights reserved.
-        </p>
+    <footer className="bg-gray-800 text-white text-center p-4 mt-6">
+      <div className="container mx-auto">
+        <p>© {new Date().getFullYear()} PLP Task Manager. All rights reserved.</p>
       </div>
     </footer>
   );

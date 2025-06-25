@@ -11,25 +11,24 @@ import PropTypes from 'prop-types';
  * @param {React.ReactNode} props.children - Button content
  * @returns {JSX.Element} - Button component
  */
-const Button = ({ 
+export default function Button({ 
+  children, 
   variant = 'primary', 
   size = 'md', 
   disabled = false, 
   onClick, 
-  children,
   className = '',
   ...rest 
-}) => {
-  // Base classes
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors';
+}) {
+  const base = "inline-flex items-center justify-center font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors";
   
   // Variant classes
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-500',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
-    success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
-    warning: 'bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500',
+    primary: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500',
+    secondary: 'bg-gray-200 text-black hover:bg-gray-300 focus:ring-gray-500',
+    danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
+    success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
+    warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500',
   };
   
   // Size classes
@@ -43,7 +42,7 @@ const Button = ({
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
   
   // Combine all classes
-  const buttonClasses = `${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.md} ${disabledClasses} ${className}`;
+  const buttonClasses = `${base} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.md} ${disabledClasses} ${className}`;
   
   return (
     <button
@@ -65,5 +64,3 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
 };
-
-export default Button;
